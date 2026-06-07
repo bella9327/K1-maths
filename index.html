@@ -38,11 +38,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-wrap: wrap; /* 允許動物換行或自動排列 */
             margin-bottom: 25px;
             border: 6px solid #bce6eb;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
-        .animal-icon { font-size: 80px; margin: 10px; }
+        .animal-icon { 
+            margin: 5px 10px; 
+            transition: font-size 0.3s; /* 加入平滑縮放效果 */
+        }
 
         .options {
             display: grid;
@@ -96,6 +102,7 @@
     <script>
         let score = 0;
         let currentCount = 0;
+        let isWaitingForNextRound = false; // 防止小朋友狂按按鈕
         const animals = ['🐷', '🐰', '🐤', '🐸'];
 
         function generateRound() {
@@ -105,32 +112,38 @@
                 return;
             }
             
+            isWaitingForNextRound = false;
+            document.getElementById('feedback').innerHTML = ''; // 清除提示文字
             const container = document.getElementById('animal-container');
             container.innerHTML = '';
             currentCount = Math.floor(Math.random() * 4) + 1;
             const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
 
+            // 當數量為 4 時，圖案縮小至 55px，否則保持 80px
+            const iconSize = currentCount === 4 ? '55px' : '80px';
+
             for (let i = 0; i < currentCount; i++) {
-                container.innerHTML += `<span class="animal-icon">${randomAnimal}</span>`;
+                container.innerHTML += `<span class="animal-icon" style="font-size: ${iconSize}">${randomAnimal}</span>`;
             }
         }
 
         function checkAnswer(num) {
-            if (score >= 100) return;
+            if (score >= 100 || isWaitingForNextRound) return;
 
             const feedback = document.getElementById('feedback');
             
             if (num === currentCount) {
+                // 答對了
                 score += 10;
                 document.getElementById('score').innerText = score;
-                feedback.innerHTML = '✅ 對啦！';
+                feedback.innerHTML = '✅ 對啦！好叻仔/女！';
                 feedback.style.color = '#4caf50';
-                setTimeout(generateRound, 1000);
+                isWaitingForNextRound = true; // 鎖定按鈕
+                setTimeout(generateRound, 1200); // 1.2秒後進入下一題
             } else {
-                feedback.innerHTML = `❌ 這是 ${currentCount} 隻呀！`;
+                // 答錯了，不跳下一題，鼓勵再試
+                feedback.innerHTML = `❌ 差少少，不如再數多次呀？`;
                 feedback.style.color = '#ff8b94';
-                // 答錯後顯示正確答案 1.5 秒，然後自動進入下一題
-                setTimeout(generateRound, 1800);
             }
         }
 
