@@ -136,13 +136,13 @@
                 // 答對了
                 score += 10;
                 document.getElementById('score').innerText = score;
-                feedback.innerHTML = '✅ 對啦！好叻仔/女！';
+                feedback.innerHTML = '✅ 答對了！';
                 feedback.style.color = '#4caf50';
                 isWaitingForNextRound = true; // 鎖定按鈕
                 setTimeout(generateRound, 1200); // 1.2秒後進入下一題
             } else {
                 // 答錯了，不跳下一題，鼓勵再試
-                feedback.innerHTML = `❌ 差少少，不如再數多次呀？`;
+                feedback.innerHTML = `💪🏻 不如再多算一次？`;
                 feedback.style.color = '#ff8b94';
             }
         }
