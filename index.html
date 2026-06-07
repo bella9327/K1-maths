@@ -18,68 +18,70 @@
             min-height: 100vh;
         }
 
-        h1 { color: #ff8b94; }
+        h1 { color: #ff8b94; margin-bottom: 10px; }
 
         .score-board {
-            font-size: 24px;
+            font-size: 28px;
             background-color: #ffecd2;
-            padding: 10px 30px;
-            border-radius: 20px;
+            padding: 10px 40px;
+            border-radius: 25px;
             margin-bottom: 20px;
+            font-weight: bold;
         }
 
         .game-area {
             background-color: #ffffff;
             width: 90%;
-            max-width: 400px;
-            height: 200px;
-            border-radius: 30px;
+            max-width: 450px;
+            height: 250px;
+            border-radius: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
-            border: 4px solid #bce6eb;
+            margin-bottom: 25px;
+            border: 6px solid #bce6eb;
         }
 
-        /* 兩排式排列 */
+        .animal-icon { font-size: 80px; margin: 10px; }
+
         .options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 20px;
+            margin-bottom: 25px;
         }
 
         .option-btn {
-            width: 100px;
-            height: 80px;
-            border-radius: 20px;
+            width: 120px;
+            height: 100px;
+            border-radius: 30px;
             border: none;
-            font-size: 40px;
+            font-size: 50px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 5px 0 #999;
+            box-shadow: 0 8px 0 #999;
         }
 
-        #feedback { font-size: 24px; font-weight: bold; height: 30px; margin-bottom: 10px; }
-
+        #feedback { font-size: 32px; font-weight: bold; height: 50px; margin-bottom: 20px; }
+        
         #restart-btn {
-            padding: 10px 25px;
-            font-size: 18px;
+            padding: 15px 30px;
+            font-size: 22px;
             background-color: #ffb6b9;
             border: none;
-            border-radius: 15px;
+            border-radius: 20px;
             cursor: pointer;
             color: white;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <h1>✨ 數數小動物 ✨</h1>
-    <div class="score-board">分數：<span id="score">0</span> / 50 ⭐️</div>
+    <div class="score-board">分數：<span id="score">0</span> / 100 ⭐️</div>
 
     <div class="game-area" id="animal-container"></div>
-    
     <div id="feedback"></div>
 
     <div class="options">
@@ -97,9 +99,9 @@
         const animals = ['🐷', '🐰', '🐤', '🐸'];
 
         function generateRound() {
-            if (score >= 50) {
-                document.getElementById('feedback').innerHTML = '👏🏻恭喜你獲得💯';
-                document.getElementById('animal-container').innerHTML = '🎉';
+            if (score >= 100) {
+                document.getElementById('animal-container').innerHTML = '<span style="font-size:80px">👏🏻👏🏻👏🏻</span>';
+                document.getElementById('feedback').innerHTML = '恭喜你獲得💯分！';
                 return;
             }
             
@@ -109,19 +111,26 @@
             const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
 
             for (let i = 0; i < currentCount; i++) {
-                container.innerHTML += `<span style="font-size:50px">${randomAnimal}</span>`;
+                container.innerHTML += `<span class="animal-icon">${randomAnimal}</span>`;
             }
         }
 
         function checkAnswer(num) {
-            if (score >= 50) return;
+            if (score >= 100) return;
+
+            const feedback = document.getElementById('feedback');
+            
             if (num === currentCount) {
                 score += 10;
                 document.getElementById('score').innerText = score;
-                generateRound();
+                feedback.innerHTML = '✅ 對啦！';
+                feedback.style.color = '#4caf50';
+                setTimeout(generateRound, 1000);
             } else {
-                document.getElementById('feedback').innerHTML = '再試一次！';
-                setTimeout(() => document.getElementById('feedback').innerHTML = '', 1000);
+                feedback.innerHTML = `❌ 這是 ${currentCount} 隻呀！`;
+                feedback.style.color = '#ff8b94';
+                // 答錯後顯示正確答案 1.5 秒，然後自動進入下一題
+                setTimeout(generateRound, 1800);
             }
         }
 
